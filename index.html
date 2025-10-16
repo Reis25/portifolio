@@ -1,1446 +1,413 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Portfólio - Demétrios Reis</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<style>
-        :root {
-    --header-height: 100px; /* fallback, atualizado via JS */
-
-            --bg-color: #231f20;
-            --secondary-bg: #2a2a2a;
-            --text-color: #f5f5f5;
-            --accent-color: #cc092f;
-            --accent-hover: #e80a3a;
-            --card-bg: rgba(42, 42, 42, 0.7);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-    padding-top: var(--header-height);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Cabeçalho com auto-hide */
-        header {
-            background: linear-gradient(135deg, var(--bg-color) 0%, #1a1a1a 100%);
-            padding: 0.8rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            transform: translateY(0);
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        header.hidden {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
-
-        /* Área de detecção para mostrar o header */
-        .header-trigger {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 20px;
-            z-index: 999;
-            background: transparent;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: var(--text-color);
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .theme-toggle, .lang-toggle {
-            background: none;
-            border: 2px solid var(--accent-color);
-            color: var(--text-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .theme-toggle:hover, .lang-toggle:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        /* Navegação */
-        nav {
-            margin-top: 0.5rem;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        nav ul li {
-            margin: 0 0.8rem;
-        }
-
-        nav ul li a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.3rem 0.8rem;
-            border-radius: 5px;
-            transition: var(--transition);
-            position: relative;
-            font-size: 0.95rem;
-        }
-
-        nav ul li a:hover, nav ul li a.active {
-            color: var(--accent-color);
-        }
-
-        nav ul li a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--accent-color);
-        }
-
-        /* Conteúdo Principal */
-        main {
-            
-            padding-bottom: 3rem;
-            transition: margin-top 0.3s ease;
-        }
-
-        main.header-hidden {
-            margin-top: 20px;
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Seção Inicial */
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--text-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            color: #ccc;
-        }
-
-        .profile-img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 5px solid var(--accent-color);
-            margin-bottom: 2rem;
-            object-fit: cover;
-        }
-
-        /* Contato */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-card {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid rgba(204, 9, 47, 0.3);
-        }
-
-        .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(204, 9, 47, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        .contact-card i {
-            font-size: 2rem;
-            color: var(--accent-color);
-            margin-bottom: 1rem;
-        }
-
-        .contact-card h3 {
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-card a {
-            color: var(--text-color);
-            text-decoration: none;
-            transition: var(--transition);
-            display: block;
-            text-align: center;
-        }
-
-        .contact-card a:hover {
-            color: var(--accent-color);
-        }
-
-        /* Formulário de Contato */
-        .contact-form {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            margin-top: 2rem;
-            border: 1px solid rgba(204, 9, 47, 0.3);
-        }
-
-        .contact-form h2 {
-            margin-bottom: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            color: var(--text-color);
-            transition: var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(204, 9, 47, 0.3);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(204, 9, 47, 0.3);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        .card h2 {
-            color: var(--accent-color);
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .card h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--accent-color);
-        }
-
-        /* Skills List - Novo formato */
-        .skills-list {
-            margin-top: 1.5rem;
-        }
-
-        .skill-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(204, 9, 47, 0.2);
-            border-radius: 8px;
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-            transition: var(--transition);
-        }
-
-        .skill-item:hover {
-            background: rgba(204, 9, 47, 0.1);
-            border-color: var(--accent-color);
-            transform: translateX(5px);
-        }
-
-        .skill-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-icon {
-            color: var(--accent-color);
-            margin-right: 1rem;
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .skill-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-color);
-        }
-
-        .skill-description {
-            color: #ccc;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-left: 2.2rem;
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding: 2rem 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 30px;
-            height: 100%;
-            width: 2px;
-            background: var(--accent-color);
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 70px;
-            margin-bottom: 2rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 22px;
-            top: 5px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            border: 3px solid var(--bg-color);
-        }
-
-        .timeline-content {
-            background: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid rgba(204, 9, 47, 0.3);
-        }
-
-        .timeline-date {
-            color: var(--accent-color);
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Seção Conheça Mais */
-        .about-section {
-            display: flex;
-            gap: 3rem;
-            align-items: center;
-            margin-top: 2rem;
-        }
-
-        .about-image {
-            flex: 0 0 300px;
-        }
-
-        /* Carrossel de Imagens */
-        .carousel {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            overflow: hidden;
-            border-radius: 10px;
-            border: 3px solid var(--accent-color);
-        }
-
-        .carousel-inner {
-            display: flex;
-            transition: transform 0.5s ease;
-            height: 100%;
-        }
-
-        .carousel-item {
-            min-width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .carousel-control {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            cursor: pointer;
-            z-index: 10;
-            transition: var(--transition);
-        }
-
-        .carousel-control:hover {
-            background-color: var(--accent-color);
-        }
-
-        .carousel-control.prev {
-            left: 10px;
-        }
-
-        .carousel-control.next {
-            right: 10px;
-        }
-
-        .carousel-indicators {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-        }
-
-        .carousel-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .carousel-indicator.active {
-            background-color: var(--accent-color);
-        }
-
-        .about-content {
-            flex: 1;
-        }
-
-        .about-content p {
-            color: #ccc;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .about-content .highlight {
-            color: var(--accent-color);
-            font-weight: 500;
-        }
-
-        /* Modo Claro */
-        body.light-mode {
-            --bg-color: #f5f5f5;
-            --secondary-bg: #ffffff;
-            --text-color: #333333;
-            --card-bg: rgba(255, 255, 255, 0.9);
-        }
-
-        body.light-mode .theme-toggle, body.light-mode .lang-toggle {
-            color: var(--text-color);
-        }
-
-        body.light-mode .skill-description {
-            color: #666;
-        }
-
-        body.light-mode .about-content p {
-            color: #666;
-        }
-
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            nav ul li {
-                margin: 0.3rem 0;
-            }
-
-            main {
-                
-            }
-
-            .timeline::before {
-                left: 15px;
-            }
-
-            .timeline-item {
-                padding-left: 50px;
-            }
-
-            .timeline-item::before {
-                left: 7px;
-            }
-
-            .header-content {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .logo {
-                font-size: 1.3rem;
-            }
-
-            .header-controls {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .theme-toggle, .lang-toggle {
-                font-size: 0.8rem;
-                padding: 0.2rem 0.6rem;
-            }
-
-            .skill-item {
-                padding: 1rem;
-            }
-
-            .skill-description {
-                margin-left: 0;
-                margin-top: 0.5rem;
-            }
-
-            .about-section {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .about-image {
-                flex: 0 0 auto;
-                margin: 0 auto;
-            }
-
-            .carousel {
-                width: 250px;
-                height: 250px;
-            }
-        }
-
-        /* Notificação */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent-color);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            z-index: 1001;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-    </style>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Portfólio - Demétrios Reis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<!-- Área de detecção para mostrar o header -->
-<div class="header-trigger" id="headerTrigger"></div>
-<header id="header">
-<div class="container">
-<div class="header-content">
-<a class="logo" href="#">Demétrios Reis</a>
-<div class="header-controls">
-<button class="lang-toggle" id="langToggle">
-<i class="fas fa-globe"></i> <span id="langText">EN</span>
-</button>
-<button class="theme-toggle" id="themeToggle">
-<i class="fas fa-moon"></i> <span id="themeText">Modo Escuro</span>
-</button>
-</div>
-</div>
-<nav>
-<ul>
-<li><a class="nav-link active" data-i18n="nav.home" data-section="home" href="#">Início</a></li>
-<li><a class="nav-link" data-i18n="nav.contact" data-section="contato" href="#">Contato</a></li>
-<li><a class="nav-link" data-i18n="nav.education" data-section="formacao" href="#">Formação</a></li>
-<li><a class="nav-link" data-i18n="nav.softSkills" data-section="soft-skills" href="#">Soft Skills</a></li>
-<li><a class="nav-link" data-i18n="nav.hardSkills" data-section="hard-skills" href="#">Hard Skills</a></li>
-<li><a class="nav-link" data-i18n="nav.history" data-section="historico" href="#">Experiências</a></li>
-<li><a class="nav-link" data-i18n="nav.about" data-section="conheca-mais" href="#">Conheça Mais</a></li>
-</ul>
-</nav>
-</div>
-</header>
-<main class="container" id="main">
-<!-- Seção Inicial -->
-<section class="section active" id="home">
-<div class="hero">
-<img alt="Foto de Perfil" class="profile-img" src="https://z-cdn-media.chatglm.cn/files/25d7085f-4f32-430f-855b-b35b511df3cf_PERFIL1.jpeg?auth_key=1791243209-2ceaa88b163e4676a1178c24e593d69b-0-d2071e8a94fe504c55aaa897a9e1f28a"/>
-<h1 data-i18n="hero.title">Analytics Engineer</h1>
-<p data-i18n="hero.description">Especialista em análise de dados, machine learning e desenvolvimento de soluções focadas em indicadores e performance. Focado em qualidade dos dados apoio a gestão estratégica e plano de ações para alavancagem de indicadores.</p>
-<a class="btn" data-i18n="hero.contactBtn" href="#contato">Entre em Contato</a>
-</div>
-</section>
-<!-- Seção Contato -->
-<section class="section" id="contato">
-<div class="card">
-<h2 data-i18n="contact.title">Informações de Contato</h2>
-<div class="contact-grid">
-<div class="contact-card">
-<i class="fab fa-linkedin"></i>
-<h3 data-i18n="contact.linkedin">LinkedIn</h3>
-<a href="https://www.linkedin.com/in/demetrios-reis/" target="_blank">https://www.linkedin.com/in/demetrios-reis/</a>
-</div>
-<div class="contact-card">
-<i class="fas fa-phone"></i>
-<h3 data-i18n="contact.phone">Telefone</h3>
-<a href="tel:+5511999999999">(82) 99968-5968</a>
-</div>
-<div class="contact-card">
-<i class="fas fa-map-marker-alt"></i>
-<h3 data-i18n="contact.address">Endereço</h3>
-<p>Máceio, AL - Brasil</p>
-</div>
-<div class="contact-card">
-<i class="fab fa-whatsapp"></i>
-<h3 data-i18n="contact.whatsapp">WhatsApp</h3>
-<a data-i18n="contact.whatsappBtn" href="https://wa.me/5582999685968?text=Olá%20Demétrios!%20Vi%20seu%20portfólio%20e%20gostaria%20de%20conversar." target="_blank">Enviar Mensagem</a>
-</div>
-<div class="contact-card">
-<i class="fab fa-github"></i>
-<h3 data-i18n="contact.github">GitHub</h3>
-<a data-i18n="contact.githubBtn" href="https://github.com/Reis25" target="_blank">Ver Perfil GitHub</a>
-</div>
-</div>
-</div>
-<div class="contact-form">
-<h2 data-i18n="contact.formTitle">Envie uma Mensagem</h2>
-<form id="contactForm">
-<div class="form-group">
-<label data-i18n="contact.name" for="name">Nome</label>
-<input id="name" name="name" required="" type="text"/>
-</div>
-<div class="form-group">
-<label data-i18n="contact.email" for="email">E-mail</label>
-<input id="email" name="email" required="" type="email"/>
-</div>
-<div class="form-group">
-<label data-i18n="contact.subject" for="subject">Assunto</label>
-<input id="subject" name="subject" required="" type="text"/>
-</div>
-<div class="form-group">
-<label data-i18n="contact.message" for="message">Mensagem</label>
-<textarea id="message" name="message" required="" rows="5"></textarea>
-</div>
-<button class="btn" data-i18n="contact.sendBtn" type="submit">Enviar Mensagem</button>
-</form>
-</div>
-</section>
-<!-- Seção Formação -->
-<section class="section" id="formacao">
-<div class="card">
-<h2 data-i18n="education.title">Formação Acadêmica</h2>
-<div class="timeline">
-<div class="timeline-item">
-<div class="timeline-date">2025 - 2026</div>
-<div class="timeline-content">
-<h3>Master Of Business Administration - MBA</h3>
-<p>Instituto de Pós-Graduação e Graduação (IPOG)</p>
-<p data-i18n="education.mba">Especialização em implantação de sistemas de Inteligência Artificial.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2025 - 2027</div>
-<div class="timeline-content">
-<h3 data-i18n="education.mastersTitle">Mestrado em Ciência da Computação</h3>
-<p>Universidade Federal de Alagoas (UFAL)</p>
-<p data-i18n="education.mastersDesc">Inteligência Computacional Aplicada à Internet das Coisas e Cidades Inteligentes.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2013 - 2017</div>
-<div class="timeline-content">
-<h3 data-i18n="education.bachelorsTitle">Graduação em Engenharia de Computação</h3>
-<p>Universidade Federal de Alagoas (UFAL)</p>
-<p data-i18n="education.bachelorsDesc">Desenvolvimento de Softwares e Hardwares.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2016 - 2017</div>
-<div class="timeline-content">
-<h3 data-i18n="education.microelectronicsTitle">Capacitação em Microeletrônica</h3>
-<p>Universidade Federal de Alagoas (UFAL)</p>
-<p data-i18n="education.microelectronicsDesc">Projetos relacionadas a implementação e verificação de hardware digital.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2008 - 2012</div>
-<div class="timeline-content">
-<h3 data-i18n="education.electrotechnicalTitle">Técnico em Eletrotécnica</h3>
-<p>Instituto Federal de Alagoas (IFAL)</p>
-<p data-i18n="education.electrotechnicalDesc">Curso técnico de nível médio em eletrotécnica.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Seção Soft Skills -->
-<section class="section" id="soft-skills">
-<div class="card">
-<h2 data-i18n="softSkills.title">Soft Skills</h2>
-<p data-i18n="softSkills.description">Ao longo da minha jornada profissional, busquei aprimorar minhas habilidades pessoais, algumas delas possuem certificações e podem ser consultadas a qualquer momento.</p>
-<div class="skills-list">
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-lightbulb skill-icon"></i>
-<span class="skill-name" data-i18n="softSkills.problemSolving">Resolução de Problemas</span>
-</div>
-<div class="skill-description" data-i18n="softSkills.problemSolvingDesc">A razão por ser engenheiro é o gosto particular por raciocinar de forma analítica para identificar raízes de problemas complexos, desenvolver soluções criativas e implementar estratégias eficazes para superar desafios.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-brain skill-icon"></i>
-<span class="skill-name" data-i18n="softSkills.criticalThinking">Pensamento Crítico</span>
-</div>
-<div class="skill-description" data-i18n="softSkills.criticalThinkingDesc">Área de dados requer habilidade de analisar situações de forma lógica, questionar premissas, avaliar evidências e tomar decisões fundamentadas em dados e fatos concretos.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-users skill-icon"></i>
-<span class="skill-name" data-i18n="softSkills.teamwork">Trabalho em Equipe</span>
-</div>
-<div class="skill-description" data-i18n="softSkills.teamworkDesc">Gosto muito de trabalhar em equipe, vejo como uma oportunidade de ouvir outros pontos de vista e também avaliar minhas ideias para resolução de problemas, uma esculta humilde e falas respeitosas alcançam resultados incríveis! É nisso que acredito.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-comments skill-icon"></i>
-<span class="skill-name" data-i18n="softSkills.communication">Comunicação Efetiva</span>
-</div>
-<div class="skill-description" data-i18n="softSkills.communicationDesc">Tenho a capacidade de transmitir ideias de forma clara e objetiva, adaptando a comunicação ao público-alvo, pois entendo que após o desenvolvimento e tratamento dos dados o especialista deve garantir a entrega para a área operacional da organização.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-sync-alt skill-icon"></i>
-<span class="skill-name" data-i18n="softSkills.adaptability">Adaptabilidade</span>
-</div>
-<div class="skill-description" data-i18n="softSkills.adaptabilityDesc">Flexibilidade para lidar com mudanças, não só da organização em si, mas de pessoas de objetivo e nível de entrega.</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Seção Hard Skills -->
-<section class="section" id="hard-skills">
-<div class="card">
-<h2 data-i18n="hardSkills.title">Hard Skills</h2>
-<p data-i18n="hardSkills.description">Competências técnicas e conhecimentos especializados:</p>
-<div class="skills-list">
-<div class="skill-item">
-<div class="skill-header">
-<i class="fab fa-python skill-icon"></i>
-<span class="skill-name">Python</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.pythonDesc">Domínio avançado da linguagem Python para desenvolvimento de aplicações, automação de processos, análise de dados e implementação de algoritmos complexos.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-database skill-icon"></i>
-<span class="skill-name">SQL</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.sqlDesc">Proficiência em consultas SQL complexas, otimização de queries, design de bancos de dados relacionais e manipulação de grandes volumes de dados.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-cube skill-icon"></i>
-<span class="skill-name">Databricks</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.databricksDesc">Experiência com plataforma Databricks para processamento de big data, notebooks colaborativos e pipelines de machine learning em escala.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-table skill-icon"></i>
-<span class="skill-name">ETL</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.pandasDesc">Domínio das bibliotecas Pandas e NumPy para manipulação eficiente de dados, transformação de datasets e cálculos numéricos de alto desempenho.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-code-branch skill-icon"></i>
-<span class="skill-name">Git</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.gitDesc">Controle de versão profissional com Git, incluindo branching, merging, pull requests e colaboração em equipes de desenvolvimento distribuídas.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-snowflake skill-icon"></i>
-<span class="skill-name">Snowflake</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.snowflakeDesc">Domínio do data warehouse Snowflake, otimização de queries, gerenciamento de warehouses e integração com ferramentas de BI.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-chart-bar skill-icon"></i>
-<span class="skill-name">Grafana</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.grafanaDesc">Criação de dashboards interativos e monitoramento em tempo real, configuração de alertas e visualização de métricas de negócio.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-calculator skill-icon"></i>
-<span class="skill-name">DAX</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.daxDesc">Criação de medidas complexas em Power BI usando DAX, desenvolvimento de modelos de dados e cálculos de business intelligence.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-chart-line skill-icon"></i>
-<span class="skill-name">Análise de Dados</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.dataAnalysisDesc">Capacidade de extrair insights valiosos de datasets complexos, realizar análise exploratória, limpeza de dados e criação de visualizações informativas.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-robot skill-icon"></i>
-<span class="skill-name">Machine Learning</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.mlDesc">Implementação de algoritmos de aprendizado supervisionado e não supervisionado, incluindo regressão, classificação, clustering e técnicas de ensemble.</div>
-</div>
-<div class="skill-item">
-<div class="skill-header">
-<i class="fas fa-chart-bar skill-icon"></i>
-<span class="skill-name">Visualização de Dados</span>
-</div>
-<div class="skill-description" data-i18n="hardSkills.visualizationDesc">Criação de dashboards interativos e visualizações impactantes usando ferramentas como Matplotlib, Seaborn, Plotly e Power BI.</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Seção Histórico -->
-<section class="section" id="historico">
-<div class="card">
-<h2 data-i18n="history.title">Histórico Profissional</h2>
-<div class="timeline">
-<div class="timeline-item">
-<div class="timeline-date">2022- Presente</div>
-<div class="timeline-content">
-<h3 data-i18n="history.seniorTitle">Analista de Dados</h3>
-<p>Grupo Equatorial Energia</p>
-<p data-i18n="history.seniorDesc">Desenvolvimento de pipelines focados no processo de ETL, Análise e desenvolvimento de dados para planos de ação e desenvolvimento de KPI's. Desenvolvimento de dashboard usando Power BI. Liderar fóruns técnicos e reuniões setoriais.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2020 - 2022</div>
-<div class="timeline-content">
-<h3 class="element-editing editable-hover" data-i18n="history.seniorTitle" style="transition-property: all !important;">Cientista de Dados</h3>
-<p>Universidade Federal de Alagoas (UFAL)</p>
-<p data-i18n="history.analystDesc">Aplicação prática de Estatística e teoria da informação, usando: Python e R como linguagem de programação. Uso de ferramentas de MLOps para experimentos e acompanhamento de performance de modelos de Machine Learning.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2021</div>
-<div class="timeline-content">
-<h3 data-i18n="history.juniorTitle">Mentoria de Power BI</h3>
-<p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
-<p data-i18n="history.juniorDesc">Trabalho desenvolvido para a Usina Caeté, empresa de grande porte, com foco no amadurecimento da criação de dashboards para a sintetização dos dados.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2021</div>
-<div class="timeline-content">
-<h3 data-i18n="history.internTitle">Mentoria de Projetos (Grand-Pix SENAI)</h3>
-<p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
-<p data-i18n="history.internDesc"><div>Trabalho desenvolvido para concepção e desenvolvimento de projetos de nível técnico para indústria.</div><div><br/></div></p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2019 - 2020</div>
-<div class="timeline-content">
-<h3>Instrutor Técnico de Informática para Internet</h3>
-<p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
-<p>Trabalho focado no desenvolvimento profissional dos alunos da rede SENAI contando com aulas e desenvolvimento de projetos, atuando nos módulos de: Modelagem de sistemas, Desenvolvimento de sistemas, Criação e manipulação de banco de dados, etc.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2018 - 2019</div>
-<div class="timeline-content">
-<h3>Desenvolvedor de Pesquisa e Desenvolvimento</h3>
-<p>LaCCAN - Laboratório de Computação Científica e Análise Numérica.</p>
-<p>Desenvolvimento de um sistema supervisório que será empregado na medição, no diagnóstico e na detecção de perdas na rede elétrica. Aplicamos técnicas de Analise de dados e aprendizagem de máquina com linguagem R e Python, aplicando técnicas para a caracterização de sistemas elétricos.</p>
-</div>
-</div>
-<div class="timeline-item">
-<div class="timeline-date">2017 - 2018</div>
-<div class="timeline-content">
-<h3>Estagiário</h3>
-<p>Secretaria Municipal de Gestão (SEMGE).</p>
-<p>Auxílio no desenvolvimento de páginas web.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Nova Seção Conheça Mais -->
-<section class="section" id="conheca-mais">
-<div class="card">
-<h2 data-i18n="about.title">Conheça Mais</h2>
-<div class="about-section">
-<div class="about-image">
-<!-- Carrossel de Imagens -->
-<div class="carousel" id="aboutCarousel">
-<div class="carousel-inner">
-<div class="carousel-item">
-<img alt="NBA" src="IMG/M07.png"/>
-</div>
-<div class="carousel-item">
-<img alt="Pai e Filho" src="IMG/M02.jpg"/>
-</div>
-<div class="carousel-item">
-<img alt="Xadrez" src="IMG/M03.jpg"/>
-</div>
-<div class="carousel-item">
-<img alt="Viagem" src="IMG/M04.jpg"/>
-</div>
-</div>
-<button class="carousel-control prev" id="prevBtn">
-<i class="fas fa-chevron-left"></i>
-</button>
-<button class="carousel-control next" id="nextBtn">
-<i class="fas fa-chevron-right"></i>
-</button>
-<div class="carousel-indicators">
-<span class="carousel-indicator active" data-slide="0"></span>
-<span class="carousel-indicator" data-slide="1"></span>
-<span class="carousel-indicator" data-slide="2"></span>
-<span class="carousel-indicator" data-slide="3"></span>
-</div>
-</div>
-</div>
-<div class="about-content">
-<p>
+    <!-- Área de detecção para mostrar o header -->
+    <div class="header-trigger" id="headerTrigger"></div>
+    <header id="header">
+        <div class="container">
+            <div class="header-content">
+                <a class="logo" href="#">Demétrios Reis</a>
+                <div class="header-controls">
+                    <button class="lang-toggle" id="langToggle">
+                        <i class="fas fa-globe"></i> <span id="langText">EN</span>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i> <span id="themeText">Modo Escuro</span>
+                    </button>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a class="nav-link active" data-i18n="nav.home" data-section="home" href="#">Início</a></li>
+                    <li><a class="nav-link" data-i18n="nav.contact" data-section="contato" href="#">Contato</a></li>
+                    <li><a class="nav-link" data-i18n="nav.education" data-section="formacao" href="#">Formação</a></li>
+                    <li><a class="nav-link" data-i18n="nav.softSkills" data-section="soft-skills" href="#">Soft Skills</a></li>
+                    <li><a class="nav-link" data-i18n="nav.hardSkills" data-section="hard-skills" href="#">Hard Skills</a></li>
+                    <li><a class="nav-link" data-i18n="nav.history" data-section="historico" href="#">Experiências</a></li>
+                    <li><a class="nav-link" data-i18n="nav.about" data-section="conheca-mais" href="#">Conheça Mais</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container" id="main">
+        <!-- Seção Inicial -->
+        <section class="section active" id="home">
+            <div class="hero">
+                <img alt="Foto de Perfil" class="profile-img" src="https://z-cdn-media.chatglm.cn/files/25d7085f-4f32-430f-855b-b35b511df3cf_PERFIL1.jpeg?auth_key=1791243209-2ceaa88b163e4676a1178c24e593d69b-0-d2071e8a94fe504c55aaa897a9e1f28a"/>
+                <h1 data-i18n="hero.title">Data & Analytics Engineer</h1>
+                <p data-i18n="hero.description">Sou um engenheiro especializado no desenvolvimento de pipelines de dados escaláveis, governados e orientados a desempenho, aplicando as melhores práticas de engenharia para transformar dados brutos em ativos estratégicos. </p>
+                <a class="btn" data-i18n="hero.contactBtn" href="#contato">Entre em Contato</a>
+            </div>
+        </section>
+        <!-- Seção Contato -->
+        <section class="section" id="contato">
+            <div class="card">
+                <h2 data-i18n="contact.title">Informações de Contato</h2>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <i class="fab fa-linkedin"></i>
+                        <h3 data-i18n="contact.linkedin">LinkedIn</h3>
+                        <a href="https://www.linkedin.com/in/demetrios-reis/" target="_blank">LinkedIn</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-phone"></i>
+                        <h3 data-i18n="contact.phone">Telefone</h3>
+                        <a href="tel:+5511999999999">(82) 99968-5968</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3 data-i18n="contact.address">Endereço</h3>
+                        <p>Máceio, AL - Brasil</p>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fab fa-whatsapp"></i>
+                        <h3 data-i18n="contact.whatsapp">WhatsApp</h3>
+                        <a data-i18n="contact.whatsappBtn" href="https://wa.me/5582999685968?text=Olá%20Demétrios!%20Vi%20seu%20portfólio%20e%20gostaria%20de%20conversar." target="_blank">Enviar Mensagem</a>
+                    </div>
+                    <div class="contact-card">
+                        <i class="fab fa-github"></i>
+                        <h3 data-i18n="contact.github">GitHub</h3>
+                        <a data-i18n="contact.githubBtn" href="https://github.com/Reis25" target="_blank">Ver Perfil GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h2 data-i18n="contact.formTitle">Envie uma Mensagem</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label data-i18n="contact.name" for="name">Nome</label>
+                        <input id="name" name="name" required="" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.email" for="email">E-mail</label>
+                        <input id="email" name="email" required="" type="email"/>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.subject" for="subject">Assunto</label>
+                        <input id="subject" name="subject" required="" type="text"/>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="contact.message" for="message">Mensagem</label>
+                        <textarea id="message" name="message" required="" rows="5"></textarea>
+                    </div>
+                    <button class="btn" data-i18n="contact.sendBtn" type="submit">Enviar Mensagem</button>
+                </form>
+            </div>
+        </section>
+        <!-- Seção Formação -->
+        <section class="section" id="formacao">
+            <div class="card">
+                <h2 data-i18n="education.title">Formação Acadêmica</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025 - 2026</div>
+                        <div class="timeline-content">
+                            <h3>Master Of Business Administration - MBA</h3>
+                            <p>Instituto de Pós-Graduação e Graduação (IPOG)</p>
+                            <p data-i18n="education.mba">Especialização em implantação de sistemas de Inteligência Artificial.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2025 - 2027</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="education.mastersTitle">Mestrado em Ciência da Computação</h3>
+                            <p>Universidade Federal de Alagoas (UFAL)</p>
+                            <p data-i18n="education.mastersDesc">Inteligência Computacional Aplicada à Internet das Coisas e Cidades Inteligentes.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2013 - 2017</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="education.bachelorsTitle">Graduação em Engenharia de Computação</h3>
+                            <p>Universidade Federal de Alagoas (UFAL)</p>
+                            <p data-i18n="education.bachelorsDesc">Desenvolvimento de Softwares e Hardwares.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2016 - 2017</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="education.microelectronicsTitle">Capacitação em Microeletrônica</h3>
+                            <p>Universidade Federal de Alagoas (UFAL)</p>
+                            <p data-i18n="education.microelectronicsDesc">Projetos relacionadas a implementação e verificação de hardware digital.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2008 - 2012</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="education.electrotechnicalTitle">Técnico em Eletrotécnica</h3>
+                            <p>Instituto Federal de Alagoas (IFAL)</p>
+                            <p data-i18n="education.electrotechnicalDesc">Curso técnico de nível médio em eletrotécnica.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Soft Skills -->
+        <section class="section" id="soft-skills">
+            <div class="card">
+                <h2 data-i18n="softSkills.title">Soft Skills</h2>
+                <p data-i18n="softSkills.description">Ao longo da minha jornada profissional, busquei aprimorar minhas habilidades pessoais, algumas delas possuem certificações e podem ser consultadas a qualquer momento.</p>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-lightbulb skill-icon"></i>
+                            <span class="skill-name" data-i18n="softSkills.problemSolving">Resolução de Problemas</span>
+                        </div>
+                        <div class="skill-description" data-i18n="softSkills.problemSolvingDesc">A razão por ser engenheiro é o gosto particular por raciocinar de forma analítica para identificar raízes de problemas complexos, desenvolver soluções criativas e implementar estratégias eficazes para superar desafios.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-brain skill-icon"></i>
+                            <span class="skill-name" data-i18n="softSkills.criticalThinking">Pensamento Crítico</span>
+                        </div>
+                        <div class="skill-description" data-i18n="softSkills.criticalThinkingDesc">Área de dados requer habilidade de analisar situações de forma lógica, questionar premissas, avaliar evidências e tomar decisões fundamentadas em dados e fatos concretos.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-users skill-icon"></i>
+                            <span class="skill-name" data-i18n="softSkills.teamwork">Trabalho em Equipe</span>
+                        </div>
+                        <div class="skill-description" data-i18n="softSkills.teamworkDesc">Gosto muito de trabalhar em equipe, vejo como uma oportunidade de ouvir outros pontos de vista e também avaliar minhas ideias para resolução de problemas, uma esculta humilde e falas respeitosas alcançam resultados incríveis! É nisso que acredito.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-comments skill-icon"></i>
+                            <span class="skill-name" data-i18n="softSkills.communication">Comunicação Efetiva</span>
+                        </div>
+                        <div class="skill-description" data-i18n="softSkills.communicationDesc">Tenho a capacidade de transmitir ideias de forma clara e objetiva, adaptando a comunicação ao público-alvo, pois entendo que após o desenvolvimento e tratamento dos dados o especialista deve garantir a entrega para a área operacional da organização.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-sync-alt skill-icon"></i>
+                            <span class="skill-name" data-i18n="softSkills.adaptability">Adaptabilidade</span>
+                        </div>
+                        <div class="skill-description" data-i18n="softSkills.adaptabilityDesc">Flexibilidade para lidar com mudanças, não só da organização em si, mas de pessoas de objetivo e nível de entrega.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Hard Skills -->
+        <section class="section" id="hard-skills">
+            <div class="card">
+                <h2 data-i18n="hardSkills.title">Hard Skills</h2>
+                <p data-i18n="hardSkills.description">Competências técnicas e conhecimentos especializados:</p>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fab fa-python skill-icon"></i>
+                            <span class="skill-name">Python</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.pythonDesc">Domínio avançado da linguagem Python para desenvolvimento de aplicações, automação de processos, análise de dados e implementação de algoritmos complexos.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-database skill-icon"></i>
+                            <span class="skill-name">SQL</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.sqlDesc">Proficiência em consultas SQL complexas, otimização de queries, design de bancos de dados relacionais e manipulação de grandes volumes de dados.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-cube skill-icon"></i>
+                            <span class="skill-name">Databricks</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.databricksDesc">Experiência com plataforma Databricks para processamento de big data, notebooks colaborativos e pipelines de machine learning em escala.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-table skill-icon"></i>
+                            <span class="skill-name">ETL</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.pandasDesc">Domínio das bibliotecas Pandas e NumPy para manipulação eficiente de dados, transformação de datasets e cálculos numéricos de alto desempenho.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-code-branch skill-icon"></i>
+                            <span class="skill-name">Git</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.gitDesc">Controle de versão profissional com Git, incluindo branching, merging, pull requests e colaboração em equipes de desenvolvimento distribuídas.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-snowflake skill-icon"></i>
+                            <span class="skill-name">Snowflake</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.snowflakeDesc">Domínio do data warehouse Snowflake, otimização de queries, gerenciamento de warehouses e integração com ferramentas de BI.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-chart-bar skill-icon"></i>
+                            <span class="skill-name">Grafana</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.grafanaDesc">Criação de dashboards interativos e monitoramento em tempo real, configuração de alertas e visualização de métricas de negócio.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-calculator skill-icon"></i>
+                            <span class="skill-name">DAX</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.daxDesc">Criação de medidas complexas em Power BI usando DAX, desenvolvimento de modelos de dados e cálculos de business intelligence.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-chart-line skill-icon"></i>
+                            <span class="skill-name">Análise de Dados</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.dataAnalysisDesc">Capacidade de extrair insights valiosos de datasets complexos, realizar análise exploratória, limpeza de dados e criação de visualizações informativas.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-robot skill-icon"></i>
+                            <span class="skill-name">Machine Learning</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.mlDesc">Implementação de algoritmos de aprendizado supervisionado e não supervisionado, incluindo regressão, classificação, clustering e técnicas de ensemble.</div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <i class="fas fa-chart-bar skill-icon"></i>
+                            <span class="skill-name">Visualização de Dados</span>
+                        </div>
+                        <div class="skill-description" data-i18n="hardSkills.visualizationDesc">Criação de dashboards interativos e visualizações impactantes usando ferramentas como Matplotlib, Seaborn, Plotly e Power BI.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Seção Histórico -->
+        <section class="section" id="historico">
+            <div class="card">
+                <h2 data-i18n="history.title">Histórico Profissional</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2022- Presente</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="history.seniorTitle">Analista de Dados</h3>
+                            <p>Grupo Equatorial Energia</p>
+                            <p data-i18n="history.seniorDesc">Desenvolvimento de pipelines focados no processo de ETL, Análise e desenvolvimento de dados para planos de ação e desenvolvimento de KPI's. Desenvolvimento de dashboard usando Power BI. Liderar fóruns técnicos e reuniões setoriais.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2020 - 2022</div>
+                        <div class="timeline-content">
+                            <h3 class="element-editing editable-hover" data-i18n="history.seniorTitle" style="transition-property: all !important;">Cientista de Dados</h3>
+                            <p>Universidade Federal de Alagoas (UFAL)</p>
+                            <p data-i18n="history.analystDesc">Aplicação prática de Estatística e teoria da informação, usando: Python e R como linguagem de programação. Uso de ferramentas de MLOps para experimentos e acompanhamento de performance de modelos de Machine Learning.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2021</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="history.juniorTitle">Mentor DataViz com Power BI</h3>
+                            <p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
+                            <p data-i18n="history.juniorDesc">Trabalho desenvolvido para a Usina Caeté, empresa de grande porte, com foco no amadurecimento da criação de dashboards para a sintetização dos dados.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2021</div>
+                        <div class="timeline-content">
+                            <h3 data-i18n="history.internTitle">Mentoria de Projetos (Grand-Pix SENAI)</h3>
+                            <p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
+                            <p data-i18n="history.internDesc"><div>Trabalho desenvolvido para concepção e desenvolvimento de projetos de nível técnico para indústria.</div><div><br/></div></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2019 - 2020</div>
+                        <div class="timeline-content">
+                            <h3>Instrutor</h3>
+                            <p>Serviço Nacional de Aprendizagem Industrial (SENAI).</p>
+                            <p>Trabalho focado no desenvolvimento profissional dos alunos da rede SENAI contando com aulas e desenvolvimento de projetos, atuando nos módulos de: Modelagem de sistemas, Desenvolvimento de sistemas, Criação e manipulação de banco de dados, etc.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2018 - 2019</div>
+                        <div class="timeline-content">
+                            <h3>Analista de dados</h3>
+                            <p>LaCCAN - Laboratório de Computação Científica e Análise Numérica.</p>
+                            <p>Desenvolvimento de um sistema supervisório que será empregado na medição, no diagnóstico e na detecção de perdas na rede elétrica. Aplicamos técnicas de Analise de dados e aprendizagem de máquina com linguagem R e Python, aplicando técnicas para a caracterização de sistemas elétricos.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2017 - 2018</div>
+                        <div class="timeline-content">
+                            <h3>Desenvolvedor Front-End</h3>
+                            <p>Secretaria Municipal de Gestão (SEMGE).</p>
+                            <p>Atuação no desenvolvimento de interfaces modernas e responsivas utilizando o framework PrimeFaces, integrando componentes ricos e interativos em aplicações Java Server Faces (JSF).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Nova Seção Conheça Mais -->
+        <section class="section" id="conheca-mais">
+            <div class="card">
+                <h2 data-i18n="about.title">Conheça Mais</h2>
+                <div class="about-section">
+                    <div class="about-image">
+                        <!-- Carrossel de Imagens -->
+                        <div class="carousel" id="aboutCarousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item">
+                                    <img alt="NBA" src="IMG/M07.png"/>
+                                </div>
+                                <div class="carousel-item">
+                                    <img alt="Pai e Filho" src="IMG/M02.jpg"/>
+                                </div>
+                                <div class="carousel-item">
+                                    <img alt="Xadrez" src="IMG/M03.jpg"/>
+                                </div>
+                                <div class="carousel-item">
+                                    <img alt="Viagem" src="IMG/M04.jpg"/>
+                                </div>
+                            </div>
+                            <button class="carousel-control prev" id="prevBtn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="carousel-control next" id="nextBtn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="carousel-indicators">
+                                <span class="carousel-indicator active" data-slide="0"></span>
+                                <span class="carousel-indicator" data-slide="1"></span>
+                                <span class="carousel-indicator" data-slide="2"></span>
+                                <span class="carousel-indicator" data-slide="3"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-content">
+                        <p>
                             Oi! que bom ter você aqui nesse espaço! 
                         </p>
-<p>
+                        <p>
                             Seja muito bem-vindo!
                         </p>
-<p>
+                        <p>
                             Sou <span class="highlight">Demétrios Reis</span>, marido da Karol, pai do Davi! Apaixonado por tecnologia e ciências exatas, gosto de xadrez, jogar basquete, torcedor do CRB, adoro finais de semana em família, gosto de música (samba, rock, Blues, etc), praia e muitas outras coisas (😹😹😹).
                         </p>
-<p>
-                            Gosto de assistir uma boa série, inclusive ... 🤨 Se você não acredita que Breaking Bad é a melhor série já feita... aconselho você a rever suas convicções (hehe brincadeira 😸).
-                        </p>
-<p>
+                        <p>
                             Acredito que o êxito que tive em analytics engineering vem da combinação entre conhecimento técnico profundo e com uma compreensão clara dos negócios. Por isso, dedico tempo não apenas para dominar as ferramentas técnicas, mas também para entender como os dados podem gerar valor real para as organizações. Essa forma de estudo e abordagem me acompanhem desde meu período de graduação.
                         </p>
-<p>
+                        <p>
                             No mais, sou uma pessoa que busca sempre manter o equilíbrio, essa é meu norte.
-                            Viver uma vida saudável e buscar sempre minha melhoria como pessoa e consequentemente ser um colega de trabalho cada vez melhor. . 🙏🍃
+                            Viver uma vida saudável e buscar sempre minha melhoria como pessoa e consequentemente ser um colega de trabalho cada vez melhor. 
                         </p>
-<p>
+                        <p>
                             Obrigado por ter ficado até aqui! 
                             Um grande abraço e até o próximo contato! 😄🙏
                         </p>
-</div>
-</div>
-</div>
-</section>
-</main>
-<div class="notification" id="notification">
-<span id="notificationText">Mensagem enviada com sucesso!</span>
-</div>
-<script>
-        // Sistema de Tradução
-        const translations = {
-            pt: {
-                // Navegação
-                "nav.home": "Início",
-                "nav.contact": "Contato",
-                "nav.education": "Formação",
-                "nav.softSkills": "Soft Skills",
-                "nav.hardSkills": "Hard Skills",
-                "nav.history": "Histórico",
-                "nav.about": "Conheça Mais",
-                
-                // Hero
-                "hero.title": "Analytics Engineer",
-                "hero.description": "Especialista em análise de dados, machine learning e desenvolvimento de soluções focadas em indicadores e performance. Focado em qualidade dos dados apoio a gestão estratégica e plano de ações para alavancagem de indicadores.",
-                "hero.contactBtn": "Entre em Contato",
-                
-                // Contato
-                "contact.title": "Informações de Contato",
-                "contact.linkedin": "LinkedIn",
-                "contact.phone": "Telefone",
-                "contact.address": "Endereço",
-                "contact.whatsapp": "WhatsApp",
-                "contact.whatsappBtn": "Enviar Mensagem",
-                "contact.github": "GitHub",
-                "contact.githubBtn": "Ver Perfil GitHub",
-                "contact.formTitle": "Envie uma Mensagem",
-                "contact.name": "Nome",
-                "contact.email": "E-mail",
-                "contact.subject": "Assunto",
-                "contact.message": "Mensagem",
-                "contact.sendBtn": "Enviar Mensagem",
-                
-                // Formação
-                "education.title": "Formação Acadêmica",
-                "education.mba": "Especialização em implantação de sistemas de Inteligência Artificial.",
-                "education.mastersTitle": "Mestrado em Ciência da Computação",
-                "education.mastersDesc": "Inteligência Computacional Aplicada à Internet das Coisas e Cidades Inteligentes.",
-                "education.bachelorsTitle": "Graduação em Engenharia de Computação",
-                "education.bachelorsDesc": "Desenvolvimento de Softwares e Hardwares.",
-                "education.microelectronicsTitle": "Capacitação em Microeletrônica",
-                "education.microelectronicsDesc": "Projetos relacionadas a implementação e verificação de hardware digital.",
-                "education.electrotechnicalTitle": "Técnico em Eletrotécnica",
-                "education.electrotechnicalDesc": "Curso técnico de nível médio em eletrotécnica.",
-                
-                // Soft Skills
-                "softSkills.title": "Soft Skills",
-                "softSkills.description": "Ao longo da minha jornada profissional, busquei aprimorar minhas habilidades pessoais, algumas delas possuem certificações e podem ser consultadas a qualquer momento.",
-                "softSkills.problemSolving": "Resolução de Problemas",
-                "softSkills.problemSolvingDesc": "A razão por ser engenheiro é o gosto particular por raciocinar de forma analítica para identificar raízes de problemas complexos, desenvolver soluções criativas e implementar estratégias eficazes para superar desafios.",
-                "softSkills.criticalThinking": "Pensamento Crítico",
-                "softSkills.criticalThinkingDesc": "Área de dados requer habilidade de analisar situações de forma lógica, questionar premissas, avaliar evidências e tomar decisões fundamentadas em dados e fatos concretos.",
-                "softSkills.teamwork": "Trabalho em Equipe",
-                "softSkills.teamworkDesc": "Gosto muito de trabalhar em equipe, vejo como uma oportunidade de ouvir outros pontos de vista e também avaliar minhas ideias para resolução de problemas, uma esculta humilde e falas respeitosas alcançam resultados incríveis! É nisso que acredito.",
-                "softSkills.communication": "Comunicação Efetiva",
-                "softSkills.communicationDesc": "Tenho a capacidade de transmitir ideias de forma clara e objetiva, adaptando a comunicação ao público-alvo, pois entendo que após o desenvolvimento e tratamento dos dados o especialista deve garantir a entrega para a área operacional da organização.",
-                "softSkills.adaptability": "Adaptabilidade",
-                "softSkills.adaptabilityDesc": "Flexibilidade para lidar com mudanças, não só da organização em si, mas de pessoas de objetivo e nível de entrega.",
-                
-                // Hard Skills
-                "hardSkills.title": "Hard Skills",
-                "hardSkills.description": "Competências técnicas e conhecimentos especializados:",
-                "hardSkills.pythonDesc": "Domínio avançado da linguagem Python para desenvolvimento de aplicações, automação de processos, análise de dados e implementação de algoritmos complexos.",
-                "hardSkills.sqlDesc": "Proficiência em consultas SQL complexas, otimização de queries, design de bancos de dados relacionais e manipulação de grandes volumes de dados.",
-                "hardSkills.databricksDesc": "Experiência com plataforma Databricks para processamento de big data, notebooks colaborativos e pipelines de machine learning em escala.",
-                "hardSkills.pandasDesc": "Domínio das bibliotecas Pandas e NumPy para manipulação eficiente de dados, transformação de datasets e cálculos numéricos de alto desempenho.",
-                "hardSkills.gitDesc": "Controle de versão profissional com Git, incluindo branching, merging, pull requests e colaboração em equipes de desenvolvimento distribuídas.",
-                "hardSkills.snowflakeDesc": "Domínio do data warehouse Snowflake, otimização de queries, gerenciamento de warehouses e integração com ferramentas de BI.",
-                "hardSkills.grafanaDesc": "Criação de dashboards interativos e monitoramento em tempo real, configuração de alertas e visualização de métricas de negócio.",
-                "hardSkills.daxDesc": "Criação de medidas complexas em Power BI usando DAX, desenvolvimento de modelos de dados e cálculos de business intelligence.",
-                "hardSkills.dataAnalysisDesc": "Capacidade de extrair insights valiosos de datasets complexos, realizar análise exploratória, limpeza de dados e criação de visualizações informativas.",
-                "hardSkills.mlDesc": "Implementação de algoritmos de aprendizado supervisionado e não supervisionado, incluindo regressão, classificação, clustering e técnicas de ensemble.",
-                "hardSkills.visualizationDesc": "Criação de dashboards interativos e visualizações impactantes usando ferramentas como Matplotlib, Seaborn, Plotly e Power BI.",
-                
-                // Histórico
-                "history.title": "Histórico Profissional",
-                "history.seniorTitle": "Analista de Dados",
-                "history.seniorDesc": "Desenvolvimento de pipelines focados no processo de ETL, Análise e desenvolvimento de dados para planos de ação e desenvolvimento de KPI's. Desenvolvimento de dashboard usando Power BI. Liderar fóruns técnicos e reuniões setoriais.",
-                "history.analystDesc": "Aplicação prática de Estatística e teoria da informação, usando: Python e R como linguagem de programação. Uso de ferramentas de MLOps para experimentos e acompanhamento de performance de modelos de Machine Learning.",
-                "history.juniorTitle": "Mentoria de Power BI",
-                "history.juniorDesc": "Trabalho desenvolvido para a Usina Caeté, empresa de grande porte, com foco no amadurecimento da criação de dashboards para a sintetização dos dados.",
-                "history.internTitle": "Mentoria de Projetos (Grand-Pix SENAI)",
-                "history.internDesc": "Trabalho desenvolvido para concepção e desenvolvimento de projetos de nível técnico para indústria.",
-                
-                // Conheça Mais
-                "about.title": "Conheça Mais"
-            },
-            en: {
-                // Navegação
-                "nav.home": "Home",
-                "nav.contact": "Contact",
-                "nav.education": "Education",
-                "nav.softSkills": "Soft Skills",
-                "nav.hardSkills": "Hard Skills",
-                "nav.history": "Experience",
-                "nav.about": "About Me",
-                
-                // Hero
-                "hero.title": "Analytics Engineer",
-                "hero.description": "Specialist in data analysis, machine learning and development of solutions focused on indicators and performance. Focused on data quality, strategic management support and action plans to leverage indicators.",
-                "hero.contactBtn": "Get in Touch",
-                
-                // Contato
-                "contact.title": "Contact Information",
-                "contact.linkedin": "LinkedIn",
-                "contact.phone": "Phone",
-                "contact.address": "Address",
-                "contact.whatsapp": "WhatsApp",
-                "contact.whatsappBtn": "Send Message",
-                "contact.github": "GitHub",
-                "contact.githubBtn": "View GitHub Profile",
-                "contact.formTitle": "Send a Message",
-                "contact.name": "Name",
-                "contact.email": "E-mail",
-                "contact.subject": "Subject",
-                "contact.message": "Message",
-                "contact.sendBtn": "Send Message",
-                
-                // Formação
-                "education.title": "Academic Background",
-                "education.mba": "Specialization in implementation of Artificial Intelligence systems.",
-                "education.mastersTitle": "Master's in Computer Science",
-                "education.mastersDesc": "Computational Intelligence Applied to Internet of Things and Smart Cities.",
-                "education.bachelorsTitle": "Bachelor's in Computer Engineering",
-                "education.bachelorsDesc": "Software and Hardware Development.",
-                "education.microelectronicsTitle": "Microelectronics Training",
-                "education.microelectronicsDesc": "Projects related to implementation and verification of digital hardware.",
-                "education.electrotechnicalTitle": "Electrotechnical Technician",
-                "education.electrotechnicalDesc": "Mid-level technical course in electrotechnics.",
-                
-                // Soft Skills
-                "softSkills.title": "Soft Skills",
-                "softSkills.description": "Throughout my professional journey, I have sought to improve my personal skills, some of which have certifications and can be consulted at any time.",
-                "softSkills.problemSolving": "Problem Solving",
-                "softSkills.problemSolvingDesc": "The reason for being an engineer is the particular taste for reasoning analytically to identify roots of complex problems, develop creative solutions and implement effective strategies to overcome challenges.",
-                "softSkills.criticalThinking": "Critical Thinking",
-                "softSkills.criticalThinkingDesc": "Data area requires the ability to analyze situations logically, question assumptions, evaluate evidence and make decisions based on data and concrete facts.",
-                "softSkills.teamwork": "Teamwork",
-                "softSkills.teamworkDesc": "I really enjoy working in a team, I see it as an opportunity to listen to other points of view and also evaluate my ideas for problem solving, humble listening and respectful speech achieve incredible results! That's what I believe in.",
-                "softSkills.communication": "Effective Communication",
-                "softSkills.communicationDesc": "I have the ability to convey ideas clearly and objectively, adapting communication to the target audience, as I understand that after developing and processing data, the specialist must ensure delivery to the operational area of the organization.",
-                "softSkills.adaptability": "Adaptability",
-                "softSkills.adaptabilityDesc": "Flexibility to deal with changes, not only of the organization itself, but of people, objectives and level of delivery.",
-                
-                // Hard Skills
-                "hardSkills.title": "Hard Skills",
-                "hardSkills.description": "Technical competencies and specialized knowledge:",
-                "hardSkills.pythonDesc": "Advanced mastery of the Python language for application development, process automation, data analysis and implementation of complex algorithms.",
-                "hardSkills.sqlDesc": "Proficiency in complex SQL queries, query optimization, relational database design and manipulation of large volumes of data.",
-                "hardSkills.databricksDesc": "Experience with Databricks platform for big data processing, collaborative notebooks and machine learning pipelines at scale.",
-                "hardSkills.pandasDesc": "Mastery of Pandas and NumPy libraries for efficient data manipulation, dataset transformation and high-performance numerical calculations.",
-                "hardSkills.gitDesc": "Professional version control with Git, including branching, merging, pull requests and collaboration in distributed development teams.",
-                "hardSkills.snowflakeDesc": "Mastery of Snowflake data warehouse, query optimization, warehouse management and integration with BI tools.",
-                "hardSkills.grafanaDesc": "Creation of interactive dashboards and real-time monitoring, configuration of alerts and visualization of business metrics.",
-                "hardSkills.daxDesc": "Creation of complex measures in Power BI using DAX, development of data models and business intelligence calculations.",
-                "hardSkills.dataAnalysisDesc": "Ability to extract valuable insights from complex datasets, perform exploratory analysis, data cleaning and creation of informative visualizations.",
-                "hardSkills.mlDesc": "Implementation of supervised and unsupervised learning algorithms, including regression, classification, clustering and ensemble techniques.",
-                "hardSkills.visualizationDesc": "Creation of interactive dashboards and impactful visualizations using tools like Matplotlib, Seaborn, Plotly and Power BI.",
-                
-                // Histórico
-                "history.title": "Professional History",
-                "history.seniorTitle": "Data Analyst",
-                "history.seniorDesc": "Development of pipelines focused on the ETL process, Analysis and data development for action plans and development of KPIs. Development of dashboard using Power BI. Lead technical forums and sectoral meetings.",
-                "history.analystDesc": "Practical application of Statistics and information theory, using: Python and R as programming language. Use of MLOps tools for experiments and monitoring of Machine Learning model performance.",
-                "history.juniorTitle": "Power BI Mentoring",
-                "history.juniorDesc": "Work developed for Usina Caeté, a large company, focusing on maturing the creation of dashboards for data synthesis.",
-                "history.internTitle": "Project Mentoring (Grand-Pix SENAI)",
-                "history.internDesc": "Work developed for conception and development of technical level projects for industry.",
-                
-                // Conheça Mais
-                "about.title": "About Me"
-            }
-        };
-
-        // Variáveis globais
-        let currentLang = 'pt';
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-item');
-        const indicators = document.querySelectorAll('.carousel-indicator');
-        const totalSlides = slides.length;
-
-        // Função para mostrar notificação
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            notificationText.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Sistema de Tradução
-        function updateLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    element.innerHTML = translations[lang][key];
-                }
-            });
-            
-            // Atualizar texto do botão de idioma
-            document.getElementById('langText').textContent = lang === 'pt' ? 'EN' : 'PT';
-        }
-
-        // Alternar idioma
-        document.getElementById('langToggle').addEventListener('click', () => {
-            const newLang = currentLang === 'pt' ? 'en' : 'pt';
-            updateLanguage(newLang);
-        });
-
-        // Carrossel de Imagens
-        function showSlide(index) {
-            // Ocultar todos os slides
-            slides.forEach(slide => {
-                slide.style.display = 'none';
-            });
-            
-            // Remover classe active de todos os indicadores
-            indicators.forEach(indicator => {
-                indicator.classList.remove('active');
-            });
-            
-            // Verificar se o índice está dentro dos limites
-            if (index < 0) {
-                currentSlide = totalSlides - 1;
-            } else if (index >= totalSlides) {
-                currentSlide = 0;
-            } else {
-                currentSlide = index;
-            }
-            
-            // Exibir o slide atual
-            slides[currentSlide].style.display = 'block';
-            
-            // Adicionar classe active ao indicador atual
-            indicators[currentSlide].classList.add('active');
-        }
-
-        // Próximo slide
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
-
-        // Slide anterior
-        function prevSlide() {
-            showSlide(currentSlide - 1);
-        }
-
-        // Event listeners para os botões do carrossel
-        document.getElementById('nextBtn').addEventListener('click', nextSlide);
-        document.getElementById('prevBtn').addEventListener('click', prevSlide);
-
-        // Event listeners para os indicadores
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                showSlide(index);
-            });
-        });
-
-        // Auto-play do carrossel
-        let carouselInterval = setInterval(nextSlide, 5000);
-
-        // Pausar auto-play quando o mouse estiver sobre o carrossel
-        const carousel = document.getElementById('aboutCarousel');
-        carousel.addEventListener('mouseenter', () => {
-            clearInterval(carouselInterval);
-        });
-
-        // Retomar auto-play quando o mouse sair do carrossel
-        carousel.addEventListener('mouseleave', () => {
-            carouselInterval = setInterval(nextSlide, 5000);
-        });
-
-        // Sistema de Navegação
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Remover classe active de todos os links e seções
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                
-                // Adicionar classe active ao link clicado
-                link.classList.add('active');
-                
-                // Mostrar a seção correspondente
-                const sectionId = link.getAttribute('data-section');
-                const section = document.getElementById(sectionId);
-                section.classList.add('active');
-                
-                // Se a seção "Conheça Mais" for exibida, reinicializar o carrossel
-                if (sectionId === 'conheca-mais') {
-                    // Reiniciar o carrossel
-                    currentSlide = 0;
-                    showSlide(currentSlide);
-                    
-                    // Reiniciar o auto-play
-                    clearInterval(carouselInterval);
-                    carouselInterval = setInterval(nextSlide, 5000);
-                }
-            });
-        });
-
-        // Auto-hide Header
-        let lastScrollTop = 0;
-        const header = document.getElementById('header');
-        const headerTrigger = document.getElementById('headerTrigger');
-        const main = document.getElementById('main');
-
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                // Scroll down
-                header.classList.add('hidden');
-                main.classList.add('header-hidden');
-            } else {
-                // Scroll up or at top
-                header.classList.remove('hidden');
-                main.classList.remove('header-hidden');
-            }
-            
-            lastScrollTop = scrollTop;
-        });
-
-        // Mostrar header quando passar sobre a área de trigger
-        headerTrigger.addEventListener('mouseenter', () => {
-            header.classList.remove('hidden');
-            main.classList.remove('header-hidden');
-        });
-
-        // Alternar Tema
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const isLightMode = document.body.classList.contains('light-mode');
-            document.getElementById('themeText').textContent = isLightMode ? 'Modo Claro' : 'Modo Escuro';
-            
-            // Atualizar ícone
-            const icon = document.querySelector('#themeToggle i');
-            icon.className = isLightMode ? 'fas fa-sun' : 'fas fa-moon';
-        });
-
-        // Formulário de Contato
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Simular envio do formulário
-            showNotification(currentLang === 'pt' ? 'Serviço temporariamente indisponível!' : 'Message sent successfully!');
-            
-            // Limpar formulário
-            e.target.reset();
-        });
-
-        // Inicializar o primeiro slide
-        showSlide(0);
-
-        // Inicializar a página
-        document.addEventListener('DOMContentLoaded', () => {
-            updateLanguage('pt');
-        });
-    </script>
-
-<script>
-function updateHeaderHeight() {
-    const header = document.querySelector('header');
-    if (!header) return;
-    const height = header.offsetHeight;
-    document.documentElement.style.setProperty('--header-height', height + 'px');
-}
-document.addEventListener('DOMContentLoaded', updateHeaderHeight);
-window.addEventListener('resize', updateHeaderHeight);
-</script>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div class="notification" id="notification">
+        <span id="notificationText">Mensagem enviada com sucesso!</span>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
